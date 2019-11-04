@@ -97,7 +97,7 @@ end
 
 function process_input(inputjson)
     @assert last(splitext(inputjson)) == ".json"
-    j2 = jsontable(read("codebook.json", String));
+    j2 = jsontable(read("output/codebook.json", String));
     d2 = DataFrame(j2);
     d2.codedict = [Dict(string(x) => y for (x, y) in dt) for dt in d2.codedict]
     df = DataFrame(XLSX.readtable("psid_crossyear.xlsx", "MATRIX")...)
@@ -116,12 +116,12 @@ function process_input(inputjson)
     read_input = JSON3.read(read(inputjson, String), Vector{VarInput})
     process_varinput(v::VarInput) = VarInfo5(v.name_user, v.unit, process_varname(v.varID, d, df_vars, d2, fastfind)...)
     procvar = process_varinput.(read_input)
-    write("user_output.json", JSON3.write(procvar))
+    write("output/user_output.json", JSON3.write(procvar))
 
     modpath = dirname(pathof(PSID))
     indpath = "$modpath/ind_input.json"
 
     read_input = JSON3.read(read(indpath, String), Vector{VarInput})
     procvar = process_varinput.(read_input)
-    write("ind_output.json", JSON3.write(procvar))
+    write("output/ind_output.json", JSON3.write(procvar))
 end

@@ -47,5 +47,5 @@ function process_codebook()
 
     #j = objecttable(outdf)
     j = arraytable(outdf)
-    write("codebook.json", j)
+    write("output/codebook.json", j)
 end
