@@ -1,0 +1,37 @@
+[
+  {
+    "name_user": "id",
+    "varID": "V3",
+    "unit": "family"
+  },
+  {
+    "name_user": "race",
+    "varID": "V181",
+    "unit": "head"
+  },
+  {
+    "name_user": "hours",
+    "varID": "V465",
+    "unit": "head"
+  },
+  {
+    "name_user": "occ1970",
+    "varID": "V3529",
+    "unit": "head"
+  },
+  {
+    "name_user": "occ1970",
+    "varID": "V7885",
+    "unit": "spouse"
+  },
+  {
+    "name_user": "state",
+    "varID": "ER13004",
+    "unit": "family"
+  },
+  {
+    "name_user": "state_fips",
+    "varID": "V12380",
+    "unit": "family"
+  }
+]
