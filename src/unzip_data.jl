@@ -62,7 +62,7 @@ function readPSID(zipname)
     ZIPNAME = uppercase(zipname)
     t = mktempdir()
     #run(`unzip $zipname -d $t`)
-    run(DataDeps.unpack_cmd("$zipname", "$t", ".zip", ""))
+    run(DataDeps.unpack_cmd("$zipp", "$t", ".zip", ""))
     wow = readlines("$t/$ZIPNAME.do")
     alltokens = process_wow(wow)
     toks = [(alltokens[i], str2range(alltokens[i+1])) for i in 1:2:length(alltokens)]
