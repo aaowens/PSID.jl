@@ -15,9 +15,9 @@ end
 
 function construct_alldata(famdatas, inddata)
     ## Combine the VarInfo5 array with the data
-    readme = JSON3.read(read("user_output.json", String), Vector{VarInfo5})
+    readme = JSON3.read(read("output/user_output.json", String), Vector{VarInfo5})
     #readme = procvar
-    readme_ind = JSON3.read(read("ind_output.json", String), Vector{VarInfo5})
+    readme_ind = JSON3.read(read("output/ind_output.json", String), Vector{VarInfo5})
 
     years = [collect(1968:1997); collect(1999:2:2017)]
     newdatas_ind = [DataFrame() for x in famdatas]
@@ -125,8 +125,8 @@ function construct_alldata(famdatas, inddata)
         allinds = vcat(allinds, hi, cols = :union)
         allinds = vcat(allinds, si, cols = :union)
     end
-    CSV.write("allinds.csv", allinds)
-    println("Finished constructing individual data, saved to allinds.csv")
+    CSV.write("output/allinds.csv", allinds)
+    println("Finished constructing individual data, saved to output/allinds.csv")
 end
 
 
@@ -135,6 +135,7 @@ function makePSID(userinput_json)
     fx = "$x/allfiles_hash.json"
     @assert isfile(fx)
     PSID.verifyfiles(fx)
+    isdir("output") || mkdir("output")
     PSID.process_codebook()
     PSID.process_input(userinput_json)
     famdatas, inddata = PSID.unzip_data()
