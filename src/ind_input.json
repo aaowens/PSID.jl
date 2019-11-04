@@ -1,0 +1,22 @@
+[
+  {
+    "name_user": "id",
+    "varID": "ER30001",
+    "unit": "family"
+  },
+  {
+    "name_user": "seq_num",
+    "varID": "ER30021",
+    "unit": "ind"
+  },
+  {
+    "name_user": "rel_head",
+    "varID": "ER30003",
+    "unit": "ind"
+  },
+  {
+    "name_user": "educ",
+    "varID": "ER30010",
+    "unit": "ind"
+  }
+]
