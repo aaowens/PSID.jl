@@ -11,4 +11,4 @@ PSID.process_input("user_input.json")
 famdatas, inddata = PSID.unzip_data()
 PSID.construct_alldata(famdatas, inddata)
 =#
-PSID.makePSID("user_input.json")
+makePSID("user_input.json")

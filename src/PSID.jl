@@ -8,5 +8,6 @@ include("process_codebook.jl")
 include("use_codebook.jl")
 include("unzip_data.jl")
 include("construct_alldata.jl")
+export makePSID
 
 end # module
