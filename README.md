@@ -1,4 +1,8 @@
 # PSID.jl
+To add this package, use
+```
+(v1.2) pkg> add https://github.com/aaowens/PSID.jl
+```
 
 This package produces a labeled panel of individuals with a consistent individual ID across time. You provide a JSON file describing the variables you want. An example input file can be found at [examples/user_input.json.](https://github.com/aaowens/PSID.jl/blob/master/examples/user_input.json). Currently only variables in the family files can be added, but in the future it should be possible to support variables in the individual files or the supplements.
 
