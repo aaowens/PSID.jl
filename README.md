@@ -11,7 +11,8 @@ Requirements: A list of data files required to be in the current directory can b
 After acquiring the data, run 
 ```
 julia> using PSID
-julia> makePSID("user_input.json")
+julia> makePSID("user_input.json") 
+# for the raw data, makePSID("user_input.json", codemissings = false, makelabels = false)
 ```
 It will verify the required files exist and then construct the data. If successful, it will print `Finished constructing individual data, saved to output/allinds.csv` after about 5 minutes.
 
