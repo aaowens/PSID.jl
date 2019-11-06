@@ -13,7 +13,7 @@ function famid(A)
     end
 end
 
-function construct_alldata(famdatas, inddata)
+function construct_alldata(famdatas, inddata; codemissings = true, makelabels = true)
     ## Combine the VarInfo5 array with the data
     readme = JSON3.read(read("output/user_output.json", String), Vector{VarInfo5})
     #readme = procvar
@@ -39,11 +39,19 @@ function construct_alldata(famdatas, inddata)
             dat1 = data[!, sym]
             # Apply missing value codes
             sm = vari.yeardict[year][3]
-            dat2 = [x in sm ? missing : x for x in dat1 ]
+            if codemissings
+                dat2 = [x in sm ? missing : x for x in dat1 ]
+            else
+                dat2 = [x for x in dat1]
+            end
             # if categorical
             if vari.iscontinuous == false
                 labs = Dict(parse(Int, k) => v for (k, v) in vari.labeldict)
-                strdat = [ismissing(x) ? missing : labs[x] for x in dat2]
+                if makelabels
+                    strdat = [ismissing(x) ? missing : labs[x] for x in dat2]
+                else
+                    strdat = dat2
+                end
                 #newdat = CategoricalArray(strdat)
                 newdat = dat2
             else
@@ -87,12 +95,20 @@ function construct_alldata(famdatas, inddata)
                     dat1 = data[!, sym]
                     # Apply missing value codes
                     sm = vari.yeardict[year][3]
-                    dat2 = [x in sm ? missing : x for x in dat1 ]
+                    if codemissings
+                        dat2 = [x in sm ? missing : x for x in dat1 ]
+                    else
+                        dat2 = [x for x in dat1]
+                    end
                     # if categorical
                     if vari.iscontinuous == false
                         labs = Dict(parse(Int, k) => v for (k, v) in vari.labeldict)
-                        strdat = [ismissing(x) ? missing : labs[x] for x in dat2]
-                        newdat = CategoricalArray(strdat)
+                        if makelabels
+                            strdat = [ismissing(x) ? missing : labs[x] for x in dat2]
+                            newdat = CategoricalArray(strdat)
+                        else
+                            newdat = dat2
+                        end
                     else
                         newdat = dat2
                     end
@@ -130,7 +146,7 @@ function construct_alldata(famdatas, inddata)
 end
 
 
-function makePSID(userinput_json)
+function makePSID(userinput_json; codemissings = true, makelabels = true)
     x = dirname(pathof(PSID))
     fx = "$x/allfiles_hash.json"
     @assert isfile(fx)
@@ -139,5 +155,5 @@ function makePSID(userinput_json)
     PSID.process_codebook()
     PSID.process_input(userinput_json)
     famdatas, inddata = PSID.unzip_data()
-    PSID.construct_alldata(famdatas, inddata)
+    PSID.construct_alldata(famdatas, inddata, codemissings = codemissings, makelabels = makelabels)
 end
