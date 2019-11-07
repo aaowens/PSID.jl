@@ -1,4 +1,8 @@
 # PSID.jl
+To add this package, use
+```
+(v1.2) pkg> add https://github.com/aaowens/PSID.jl
+```
 
 This package produces a labeled panel of individuals with a consistent individual ID across time. You provide a JSON file describing the variables you want. An example input file can be found at [examples/user_input.json.](https://github.com/aaowens/PSID.jl/blob/master/examples/user_input.json). Currently only variables in the family files can be added, but in the future it should be possible to support variables in the individual files or the supplements.
 
@@ -11,7 +15,8 @@ Requirements: A list of data files required to be in the current directory can b
 After acquiring the data, run 
 ```
 julia> using PSID
-julia> makePSID("user_input.json")
+julia> makePSID("user_input.json") 
+# for the raw data, makePSID("user_input.json", codemissings = false, makelabels = false)
 ```
 It will verify the required files exist and then construct the data. If successful, it will print `Finished constructing individual data, saved to output/allinds.csv` after about 5 minutes.
 
