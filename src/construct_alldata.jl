@@ -147,6 +147,7 @@ end
 
 
 function makePSID(userinput_json; codemissings = true, makelabels = true)
+    isfile(userinput_json) || error("$userinput_json not found in current directory")
     x = dirname(pathof(PSID))
     fx = "$x/allfiles_hash.json"
     @assert isfile(fx)
