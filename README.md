@@ -8,8 +8,8 @@ This package produces a labeled panel of individuals with a consistent individua
 
 Requirements: A list of data files required to be in the current directory can be found [here](https://github.com/aaowens/PSID.jl/blob/master/src/allfiles_hash.json). These files are
 
-1. The PSID codebook in XML format. TODO: Explain how users can download this by themselves. 
-2. The PSID family files and cross-year individual file, which can be downloaded here https://simba.isr.umich.edu/Zips/ZipMain.aspx.
+1. The PSID codebook in XML format. You can download this from me here https://drive.google.com/open?id=1nz1UaVGcj0ur2Bp3ev7a8agJbj0A5JTF . In the future there will be a way to download this from the PSID directly. 
+2. The zipped PSID family files and cross-year individual file, which can be downloaded here https://simba.isr.umich.edu/Zips/ZipMain.aspx. Do not extract the files--leave them zipped.
 3. The XLSX cross-year index for the variables, which can be downloaded here https://psidonline.isr.umich.edu/help/xyr/psid.xlsx.
 
 After acquiring the data, run 
