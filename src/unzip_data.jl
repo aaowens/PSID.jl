@@ -60,9 +60,10 @@ end
 function readPSID(zipname)
     zipp = "$zipname.zip"
     ZIPNAME = uppercase(zipname)
-    t = mktempdir()
+    #t = mktempdir()
+    t = "datafiles/$zipname"
     #run(`unzip $zipname -d $t`)
-    run(DataDeps.unpack_cmd("$zipp", "$t", ".zip", ""))
+    isdir(t) || run(DataDeps.unpack_cmd("$zipp", "$t", ".zip", ""))
     wow = readlines("$t/$ZIPNAME.do")
     alltokens = process_wow(wow)
     toks = [(alltokens[i], str2range(alltokens[i+1])) for i in 1:2:length(alltokens)]
@@ -73,7 +74,7 @@ end
 function unzip_data()
     years = [collect(1968:1997); collect(1999:2:2017)]
     filenames = [year <= 1993 ? "fam$year" : "fam$(year)er" for year in years]
-    datas = SortedDict(year => readPSID(filename) for (year, filename) in zip(years, filenames))
+    datas =  SortedDict(year => readPSID(filename) for (year, filename) in zip(years, filenames))
     inddata = readPSID("ind2017er")
     (famdatas = datas, inddata = inddata)
 end

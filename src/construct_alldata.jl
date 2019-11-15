@@ -13,7 +13,7 @@ function famid(A)
     end
 end
 
-function construct_alldata(famdatas, inddata; codemissings = true, makelabels = true)
+function construct_alldata(famdatas, inddata; codemissings = true)
     ## Combine the VarInfo5 array with the data
     readme = JSON3.read(read("output/user_output.json", String), Vector{VarInfo5})
     #readme = procvar
@@ -39,26 +39,19 @@ function construct_alldata(famdatas, inddata; codemissings = true, makelabels = 
             dat1 = data[!, sym]
             # Apply missing value codes
             sm = vari.yeardict[year][3]
+            finalname = Symbol("$(vari.name_user)_$(vari.unit)")
             if codemissings
                 dat2 = [x in sm ? missing : x for x in dat1 ]
             else
                 dat2 = [x for x in dat1]
             end
-            # if categorical
             if vari.iscontinuous == false
                 labs = Dict(parse(Int, k) => v for (k, v) in vari.labeldict)
-                if makelabels
-                    strdat = [ismissing(x) ? missing : labs[x] for x in dat2]
-                else
-                    strdat = dat2
-                end
-                #newdat = CategoricalArray(strdat)
-                newdat = dat2
-            else
-                newdat = dat2
+                strlabel = [ismissing(x) ? missing : labs[x] for x in dat2]
+                finalname_label = Symbol("$(vari.name_user)_$(vari.unit)_label")
+                df[!, finalname_label] = strlabel
             end
-            finalname = Symbol("$(vari.name_user)_$(vari.unit)")
-            df[!, finalname] = newdat
+            df[!, finalname] = dat2
         end
     end
 
@@ -90,7 +83,6 @@ function construct_alldata(famdatas, inddata; codemissings = true, makelabels = 
                 else
                     error("???")
                 end
-                #finalname = Symbol("$(vari.name_user)_$(vari.unit)")
                 if hasproperty(data, sym)
                     dat1 = data[!, sym]
                     # Apply missing value codes
@@ -101,16 +93,12 @@ function construct_alldata(famdatas, inddata; codemissings = true, makelabels = 
                         dat2 = [x for x in dat1]
                     end
                     # if categorical
+                    newdat = dat2
                     if vari.iscontinuous == false
                         labs = Dict(parse(Int, k) => v for (k, v) in vari.labeldict)
-                        if makelabels
-                            strdat = [ismissing(x) ? missing : labs[x] for x in dat2]
-                            newdat = CategoricalArray(strdat)
-                        else
-                            newdat = dat2
-                        end
-                    else
-                        newdat = dat2
+                        strlabel = [ismissing(x) ? missing : labs[x] for x in dat2]
+                        finalname_label = Symbol("$(finalname)_label")
+                        df[!, finalname_label] = strlabel
                     end
                 else
                     newdat = [missing for i in 1:nrow(data)]
@@ -145,16 +133,30 @@ function construct_alldata(famdatas, inddata; codemissings = true, makelabels = 
     println("Finished constructing individual data, saved to output/allinds.csv")
 end
 
+"""
+    makePSID(userinput_json; codemissings = true)
 
-function makePSID(userinput_json; codemissings = true, makelabels = true)
+Constructs the PSID panel of individuals using the variables in the input JSON.
+
+Arguments: `userinput_json` - A string naming the input JSON file
+
+Keyword arguments: `codemissings` - A bool indicating whether values detected as missing according to the codebook
+ will be converted to `missing`. Defaults to true.
+"""
+function makePSID(userinput_json; codemissings = true)
     isfile(userinput_json) || error("$userinput_json not found in current directory")
     x = dirname(pathof(PSID))
     fx = "$x/allfiles_hash.json"
     @assert isfile(fx)
     PSID.verifyfiles(fx)
     isdir("output") || mkdir("output")
+    isdir("datafiles") || mkdir("datafiles")
+    println("Making codebook")
     PSID.process_codebook()
+    println("Processing input JSON")
     PSID.process_input(userinput_json)
+    println("Reading data files")
     famdatas, inddata = PSID.unzip_data()
-    PSID.construct_alldata(famdatas, inddata, codemissings = codemissings, makelabels = makelabels)
+    println("Constructing data")
+    PSID.construct_alldata(famdatas, inddata, codemissings = codemissings)
 end

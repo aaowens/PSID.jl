@@ -8,15 +8,15 @@ This package produces a labeled panel of individuals with a consistent individua
 
 Requirements: A list of data files required to be in the current directory can be found [here](https://github.com/aaowens/PSID.jl/blob/master/src/allfiles_hash.json). These files are
 
-1. The PSID codebook in XML format. You can download this from me here https://drive.google.com/open?id=1nz1UaVGcj0ur2Bp3ev7a8agJbj0A5JTF . In the future there will be a way to download this from the PSID directly. 
+1. The PSID codebook in XML format. You can download this from me here https://drive.google.com/open?id=1nz1UaVGcj0ur2Bp3ev7a8agJbj0A5JTF . In the future there will be a way to download this from the PSID directly.
 2. The zipped PSID family files and cross-year individual file, which can be downloaded here https://simba.isr.umich.edu/Zips/ZipMain.aspx. Do not extract the files--leave them zipped.
 3. The XLSX cross-year index for the variables, which can be downloaded here https://psidonline.isr.umich.edu/help/xyr/psid.xlsx.
 
-After acquiring the data, run 
+After acquiring the data, run
 ```
 julia> using PSID
-julia> makePSID("user_input.json") 
-# for the raw data, makePSID("user_input.json", codemissings = false, makelabels = false)
+julia> makePSID("user_input.json")
+# to not code missings, makePSID("user_input.json", codemissings = false)
 ```
 It will verify the required files exist and then construct the data. If successful, it will print `Finished constructing individual data, saved to output/allinds.csv` after about 5 minutes.
 
@@ -27,4 +27,4 @@ This package provides the following features:
 4. Produces consistent individual or spouse variables for individuals. In the input JSON file, you must indicate whether a variable is family level, household head level, or household spouse level. The final output will have variables of the form VAR_family, VAR_ind, or VAR_spouse. When the individual is a household head, VAR_ind will come from the household head version of that variable, and VAR_spouse will come from the household spouse version. If the individual is a household spouse, it is the reverse.
 5. It's easiest to track individuals, but this package also produces a consistent family ID by treating a family as a combination of head and spouse (if spouse exists). If you keep only household heads and drop years before 1970, (famid, year) should be an ID.
 
-This package is new and not well tested, please file issues if you find a bug. 
+This package is new and not well tested, please file issues if you find a bug.
