@@ -1,6 +1,6 @@
 module PSID
 using XLSX, DataDeps, DataFrames, CSV, LightXML, AbstractTrees, JSONTables, JSON3
-using DataFramesMeta, SHA, DataStructures, ProgressMeter
+using DataFramesMeta, SHA, DataStructures
 
 include("types.jl")
 include("init.jl")
