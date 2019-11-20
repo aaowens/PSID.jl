@@ -17,4 +17,5 @@ SHA = "ea8e919c-243c-51af-8825-aaa63cd721ce"
 XLSX = "fdbf4ff8-1666-58a4-91e7-1b58723a45e0"
 
 [compat]
+CSV = "0.5"
 JSON3 = "= 0.1.12"
