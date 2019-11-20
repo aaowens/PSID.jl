@@ -18,3 +18,4 @@ XLSX = "fdbf4ff8-1666-58a4-91e7-1b58723a45e0"
 
 [compat]
 JSON3 = "= 0.1.12"
+JSONTables = "0.1"
