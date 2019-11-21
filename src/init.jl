@@ -1,10 +1,17 @@
 function checkhash(filename)
     filename |> read |> sha256 |> bytes2hex
 end
-function verifyfiles(allfilesjson)
+function verifyfiles(allfilesjson; skip = false)
     allfiles_dict = JSON3.read(read(allfilesjson, String), SortedDict{String, String})
     for (f, v) in allfiles_dict
-        isfile(f) || error("$f not found and is required.")
+        if !isfile(f)
+            if !skip
+                error("$f not found and is required.")
+            else
+                @warn "$f not found, skipping"
+                continue
+            end
+        end
         fh = checkhash(f)
         if fh == v
             println("Found file $f, hash OK")
