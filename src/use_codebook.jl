@@ -100,7 +100,7 @@ function process_input(inputjson)
     j2 = jsontable(read("output/codebook.json", String));
     d2 = DataFrame(j2);
     d2.codedict = [Dict(string(x) => y for (x, y) in dt) for dt in d2.codedict]
-    df = DataFrame(XLSX.readtable("psid_crossyear.xlsx", "MATRIX")...)
+    df = DataFrame(XLSX.readtable("psid.xlsx", "MATRIX")...)
     df = mapcols(x -> [xx for xx in x], df)
     ## Need a map from VAR to the right row
     df_vars = df[!, r"^Y.+"]

@@ -1,5 +1,7 @@
 # PSID.jl
 
+[![Build Status](https://travis-ci.com/aaowens/PSID.jl.svg?branch=master)](https://travis-ci.com/aaowens/PSID.jl)
+
 The Panel Study of Income Dynamics (PSID) is a longitudinal public dataset which has been following a collection of families and their descendants since 1968. It provides a breadth of information about labor supply and life-cycle dynamics. More information is available at https://psidonline.isr.umich.edu/.
 
 This package produces a labeled panel of individuals with a consistent individual ID across time. You provide a JSON file describing the variables you want. An example input file can be found at [examples/user_input.json.](https://github.com/aaowens/PSID.jl/blob/master/examples/user_input.json). Currently only variables in the family files can be added, but in the future it should be possible to support variables in the individual files or the supplements.
@@ -37,9 +39,9 @@ The file passed to `makePSID` describes the variables you want.
   },
   ```
   There are three fields, `name_user`, `varID`, and `unit`. `name_user` is a name chosen by you. `varID` is one of the codes assigned by the PSID to this variable. These can be looked up in the PSID [cross-year index](https://simba.isr.umich.edu/VS/i.aspx). For example, hours above can be found in the crosswalk at `	Family Public Data Index 01>WORK 02>Hours and Weeks 03>annual in prior year 04>head 05>total:`. Clicking on the variable info will show the the list of years and associated IDs when that variable is available. Choose any of the IDs for `varID`, it does not matter. `PSID.jl` will look up all available years for that variable in the crosswalk. You must also indicate the unit, which can be `head`, `spouse`, or `family`. This makes sure the variable is assigned to the correct individual.
-  
 
-# Features 
+
+# Features
 
 This package provides the following features:
 1. Automatically labels missing values by searching the value labels from the codebook for strings like "NA", "Inap.", or "Missing".
