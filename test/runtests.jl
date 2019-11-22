@@ -6,7 +6,7 @@ using PSID, DataDeps, JSON3
 x = dirname(pathof(PSID))
 fx = "$x/allfiles_hash.json"
 skipdata = try
-    PSID.verifyfiles(fx, skip = skip)
+    PSID.verifyfiles(fx)
     println("Found all files, running full tests")
     false
 catch
