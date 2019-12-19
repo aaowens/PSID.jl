@@ -1,21 +1,21 @@
 AbstractTrees.children(x::AbstractXMLNode) = collect(child_elements(x));
 AbstractTrees.printnode(io::IO, x::AbstractXMLNode) = print(io, name(x));
+
+"Processes XML codebook tree into a usable JSON table"
 function process_codebook()
     xdoc = parse_file("J265684_codebook.xml");
     r = root(xdoc);
-    #c = child_nodes(r);
-    #e = child_elements(r);
-    #ci = collect(c);
-    #ce = collect(e);
     t = Tree(r)
+    # Travel down the tree until we reach the list of variables
     name(t[1])
-    good = children(r)[1]
-    name(good)
-    good = children(good)[1]
-    name(good)
-    good = children(good)[2]
-    name(good)
-    ce = good["VARIABLE"]
+    current_node = children(r)[1]
+    name(current_node)
+    current_node = children(current_node)[1]
+    name(current_node)
+    current_node = children(current_node)[2]
+    name(current_node)
+    ce = current_node["VARIABLE"]
+    # Ingest the variables into a DataFrame
     outdf = DataFrame()
     outdf.NAME =  [content(ce[i]["NAME"][1]) for i in 1:length(ce)]
     outdf.YEAR =  [content(ce[i]["YEAR"][1]) for i in 1:length(ce)]
