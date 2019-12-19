@@ -20,11 +20,11 @@ function parsestring(s)
     tokens
 end
 
-function process_wow(wow)
+function process_tok(tok)
     alltokens = String[]
     ready = false
-    for i = 1:length(wow)
-        w = wow[i]
+    for i = 1:length(tok)
+        w = tok[i]
         if "infix" ⊆ w
             ready = true
             continue
@@ -64,8 +64,8 @@ function readPSID(zipname)
     t = "datafiles/$zipname"
     #run(`unzip $zipname -d $t`)
     isdir(t) || run(DataDeps.unpack_cmd("$zipp", "$t", ".zip", ""))
-    wow = readlines("$t/$ZIPNAME.do")
-    alltokens = process_wow(wow)
+    tok = readlines("$t/$ZIPNAME.do")
+    alltokens = process_tok(tok)
     toks = [(alltokens[i], str2range(alltokens[i+1])) for i in 1:2:length(alltokens)]
     data = readlines("$t/$ZIPNAME.txt")
     out = read_fixedwidth(data, toks)
