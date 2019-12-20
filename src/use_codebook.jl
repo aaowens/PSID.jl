@@ -52,32 +52,33 @@ function parse2(s, v)
         return out
     end
 end
-narrow(A) = [a for a in A]
+narrowtypes(A) = [a for a in A]
 
 ```
 Inputs:
 name: The variable ID we want to match
-d: The crosswalk table
+var2ind_dict: The crosswalk table
 df_vars: The data
-d2: The codebook table
+codebook_df: The codebook table
 fastfind: Dict mapping from variable IDs to their index in the codebook
 Processes a variable ID, finds all years thats match, and collects the labels
 ```
-function process_varname(name, d, df_vars, d2, fastfind)
+function process_varname(name, var2ind_dict, df_vars, codebook_df, fastfind)
     ## Find the row in the crosswalk we can find this variable in
-    myrow = d[name]
+    myrow = var2ind_dict[name]
     ## Fetch all the names in that row
     dfvar = df_vars[myrow, :]
     mynames = [ r for r in dfvar if r !== missing]
     ## Need to figure out the variable label expansion
     # Can I just take the union?
     codevec = [fastfind[s] for s in values(mynames)]
-    codedict = [d2.codedict[i] for i in codevec]
+    codedict = [codebook_df.codedict[i] for i in codevec]
     un = Dict{String, String}()
     merge!(checkerror, un, codedict...)
     map!(trimlabel, values(un))
     varnames = SortedDict{Int, Tuple{String, String, Vector{Float64}}}(
-    parse(Int, d2.YEAR[i]) => (d2.NAME[i], d2.LABEL[i], d2.excluding[i]) for i in codevec)
+    parse(Int, codebook_df.YEAR[i]) => (codebook_df.NAME[i], codebook_df.LABEL[i],
+     codebook_df.excluding[i]) for i in codevec)
     varnames, iscontinuous(keys(un)), un
 end
 
@@ -104,6 +105,9 @@ function trimlabel(s)
     setsp = Set(sp)
     #cleaned = Set(clean.(sp))
     excluded = Int[]
+    # We want to find the unique (after cleaning) labels
+    # Iterate through the set and check if we have seen this label before
+    # If not, add it to the seen list
     for i in eachindex(sp)
         targind = setdiff(1:length(sp), union(i, excluded))
         cleaned = clean.(sp[targind])
@@ -116,27 +120,34 @@ function trimlabel(s)
         return reduce((x, y) -> "$x OR $y", newsp[2:end], init = newsp[1])
     end
 end
-
+```
+Processes input JSON file
+Reads the crosswalk and codebook table from disk and
+harmonizes the labels. Constructs the output JSON
+```
 function process_input(inputjson)
     @assert last(splitext(inputjson)) == ".json"
-    j2 = jsontable(read("output/codebook.json", String));
-    d2 = DataFrame(j2);
-    d2.codedict = [Dict(string(x) => y for (x, y) in dt) for dt in d2.codedict]
-    df = DataFrame(XLSX.readtable("psid.xlsx", "MATRIX")...)
-    df = mapcols(x -> [xx for xx in x], df)
+    codebook_json = jsontable(read("output/codebook.json", String));
+    codebook_df = DataFrame(codebook_json);
+    codebook_df.codedict = [Dict(string(x) => y for (x, y) in dt) for dt in codebook_df.codedict]
+    crosswalk_df = DataFrame(XLSX.readtable("psid.xlsx", "MATRIX")...)
+    crosswalk_df = mapcols(narrowtypes, crosswalk_df)
     ## Need a map from VAR to the right row
-    df_vars = df[!, r"^Y.+"]
-    d = Dict{String, Int}()
+    df_vars = crosswalk_df[!, r"^Y.+"]
+    var2ind_dict = Dict{String, Int}()
+    ##
     for col in eachcol(df_vars)
         x = Dict(col[i] => i for i in 1:length(col) if col[i] !== missing)
-        merge!(checkerror, d, x)
+        merge!(checkerror, var2ind_dict, x)
     end
     ## Need to figure out the variable label expansion
-    fastfind = Dict(d2.NAME[i] => i for i in 1:length(d2.NAME))
-    d2.excluding = [[parse2(k, v) for (k, v) in d if checkmissing(v)] |> skipmissing |> narrow for d in d2.codedict]
-    ### Key block
+    fastfind = Dict(codebook_df.NAME[i] => i for i in 1:length(codebook_df.NAME))
+    # Check if this label denotes a missing value code. If so, this value is an excluding value
+    codebook_df.excluding = [[parse2(k, v) for (k, v) in d if checkmissing(v)] |> skipmissing |> narrowtypes for d in codebook_df.codedict]
+
+    ### Do the final processing of the input JSON, produce the output
     read_input = JSON3.read(read(inputjson, String), Vector{VarInput})
-    process_varinput(v::VarInput) = VarInfo5(v.name_user, v.unit, process_varname(v.varID, d, df_vars, d2, fastfind)...)
+    process_varinput(v::VarInput) = VarInfo5(v.name_user, v.unit, process_varname(v.varID, var2ind_dict, df_vars, codebook_df, fastfind)...)
     procvar = process_varinput.(read_input)
     write("output/user_output.json", JSON3.write(procvar))
 
