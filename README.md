@@ -18,7 +18,7 @@ Next, download the PSID data files yourself. The package can't automatically fet
 The list of data files required to be in the current directory can be found [here](https://github.com/aaowens/PSID.jl/blob/master/src/allfiles_hash.json). These files are
 
 1. The PSID codebook in XML format. You can download this from me here https://drive.google.com/open?id=1nz1UaVGcj0ur2Bp3ev7a8agJbj0A5JTF . In the future there will be a way to download this from the PSID directly.
-2. The zipped PSID family files and cross-year individual file, which can be downloaded here https://simba.isr.umich.edu/Zips/ZipMain.aspx. Do not extract the files--leave them zipped.
+2. The zipped PSID family files and cross-year individual file, which can be downloaded here https://simba.isr.umich.edu/Zips/ZipMain.aspx. Do not extract the files--leave them zipped. You need to download every family file from 1968 to 2017, and you also need to download the cross-year individual file.
 3. The XLSX cross-year index for the variables, which can be downloaded here https://psidonline.isr.umich.edu/help/xyr/psid.xlsx.
 
 After acquiring the data, run
@@ -50,4 +50,8 @@ This package provides the following features:
 4. Produces consistent individual or spouse variables for individuals. In the input JSON file, you must indicate whether a variable is family level, household head level, or household spouse level. The final output will have variables of the form `VAR_family`, `VAR_ind`, or `VAR_spouse`. When the individual is a household head, `VAR_ind` will come from the household head version of that variable, and `VAR_spouse` will come from the household spouse version. If the individual is a household spouse, it is the reverse. Both individuals will get all family level variables.
 5. It's easiest to track individuals, but this package also produces a consistent family ID by treating a family as a combination of head and spouse (if spouse exists). If you keep only household heads and drop years before 1970, (famid, year) should be an ID.
 
-This package is new and not well tested, please file issues if you find a bug.
+# Notable Omissions
+
+Certain variables are not in the family files. For example, the wealth data are in separate files, and there is some unique information in the individual file directly. In the future I plan to add support for these data, but you can manually add them by constructing the unique individual ID yourself as (ER30001 * 1000) + ER30002, and then joining your data on that ID with the dataset produced by PSID.jl. 
+
+Please file issues if you find a bug.
