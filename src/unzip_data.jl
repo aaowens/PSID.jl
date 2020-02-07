@@ -50,7 +50,7 @@ function read_fixedwidth(data, toks)
         for j in eachindex(toks)
             tok = toks[j]
             r = tok[2]
-            dat[i, j] = parse(Float64, line[r])
+            dat[i, j] = Parsers.parse(Float64, line[r])
         end
     end
     DataFrame(dat, Symbol.(names))

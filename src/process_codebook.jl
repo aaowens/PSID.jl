@@ -30,10 +30,8 @@ function process_codebook()
 
     list_codes[1]
 
-    ```
-    Take a codexml vector of some length containing (value, text) pairs
-    Return a dict
-    ```
+    # Take a codexml vector of some length containing (value, text) pairs
+    # Return a dict
     function process_codes(codexml)
         codes = codexml["CODE"]
         vals = [content(c["VALUE"][1]) for c in codes]
