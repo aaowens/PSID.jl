@@ -1,6 +1,7 @@
 # PSID.jl
 
 [![Build Status](https://travis-ci.com/aaowens/PSID.jl.svg?branch=master)](https://travis-ci.com/aaowens/PSID.jl)
+[![codecov](https://codecov.io/gh/aaowens/PSID.jl/branch/master/graph/badge.svg)](https://codecov.io/gh/aaowens/PSID.jl)
 
 The Panel Study of Income Dynamics (PSID) is a longitudinal public dataset which has been following a collection of families and their descendants since 1968. It provides a breadth of information about labor supply and life-cycle dynamics. More information is available at https://psidonline.isr.umich.edu/.
 
