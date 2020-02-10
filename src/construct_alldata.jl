@@ -28,6 +28,7 @@ function construct_alldata(famdatas, inddata; codemissings = true)
         data = inddata
         #df[!, :id_ind] = 1:nrow(inddata)
         df[!, :id_ind] = Int.(1000data.ER30001 .+ data.ER30002)
+        df[!, :famid_1968] = Int.(data.ER30001)
         df[!, :year] .= year
         for vari in readme_ind
             ## Check if vari is in the data this year
