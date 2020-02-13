@@ -41,6 +41,7 @@ function construct_alldata(famdatas, inddata; codemissings = true)
             # Apply missing value codes
             sm = vari.yeardict[year][3]
             finalname = Symbol("$(vari.name_user)_$(vari.unit)")
+            finalname_code = Symbol("$(finalname)_code_ind")
             if codemissings
                 dat2 = [x in sm ? missing : x for x in dat1 ]
             else
@@ -53,6 +54,8 @@ function construct_alldata(famdatas, inddata; codemissings = true)
                 df[!, finalname_label] = strlabel
             end
             df[!, finalname] = dat2
+            df[!, finalname_code] .= ss
+
         end
     end
 
@@ -84,6 +87,7 @@ function construct_alldata(famdatas, inddata; codemissings = true)
                 else
                     error("???")
                 end
+                finalname_code = Symbol("$(finalname)_code_fam")
                 if hasproperty(data, sym)
                     dat1 = data[!, sym]
                     # Apply missing value codes
@@ -106,6 +110,8 @@ function construct_alldata(famdatas, inddata; codemissings = true)
                     println("Warning: $sym, $finalname in $year was supposed to be in the data but isn't there")
                 end
                 df[!, finalname] = newdat
+                df[!, finalname_code] .= ss
+
             end
             df[!, :year] .= year
             df[!, :ishead] .= ishead
