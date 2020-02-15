@@ -7,6 +7,8 @@ The Panel Study of Income Dynamics (PSID) is a longitudinal public dataset which
 
 This package produces a labeled panel of individuals with a consistent individual ID across time. You provide a JSON file describing the variables you want. An example input file can be found at [examples/user_input.json.](https://github.com/aaowens/PSID.jl/blob/master/examples/user_input.json). Currently only variables in the family files can be added, but in the future it should be possible to support variables in the individual files or the supplements.
 
+An example workflow can be found on my blog post [here](https://aaowens.github.io/julia/2020/02/11/Using-the-Panel-Study-of-Income-Dynamics.html)
+
 # Instructions
 
 To add this package, use
