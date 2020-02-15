@@ -85,7 +85,7 @@ function construct_alldata(famdatas, inddata; codemissings = true)
                 elseif vari.unit == "spouse" && !ishead
                     finalname = Symbol("$(vari.name_user)_ind")
                 else
-                    error("???")
+                    error("Variable unit for $(vari.name_user) must be family, head, or spouse")
                 end
                 finalname_code = Symbol("$(finalname)_code_fam")
                 if hasproperty(data, sym)
