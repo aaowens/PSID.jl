@@ -32,14 +32,14 @@ function construct_alldata(famdatas, inddata; codemissings = true)
         df[!, :year] .= year
         for vari in readme_ind
             ## Check if vari is in the data this year
-            if !haskey(vari.yeardict, year)
+            if !haskey(vari.yeardict, string(year))
                 continue
             end
-            ss = vari.yeardict[year][1]
+            ss = vari.yeardict[string(year)][1]
             sym = Symbol(ss)
             dat1 = data[!, sym]
             # Apply missing value codes
-            sm = vari.yeardict[year][3]
+            sm = vari.yeardict[string(year)][3]
             finalname = Symbol("$(vari.name_user)_$(vari.unit)")
             finalname_code = Symbol("$(finalname)_code_ind")
             if codemissings
@@ -69,10 +69,10 @@ function construct_alldata(famdatas, inddata; codemissings = true)
             data = famdatas[year]
             for vari in readme
                 ## Check if vari is in the data this year
-                if !haskey(vari.yeardict, year)
+                if !haskey(vari.yeardict, string(year))
                     continue
                 end
-                ss = vari.yeardict[year][1]
+                ss = vari.yeardict[string(year)][1]
                 sym = Symbol(ss)
                 if vari.unit == "family"
                     finalname = Symbol("$(vari.name_user)_family")
@@ -91,7 +91,7 @@ function construct_alldata(famdatas, inddata; codemissings = true)
                 if hasproperty(data, sym)
                     dat1 = data[!, sym]
                     # Apply missing value codes
-                    sm = vari.yeardict[year][3]
+                    sm = vari.yeardict[string(year)][3]
                     if codemissings
                         dat2 = [x in sm ? missing : x for x in dat1 ]
                     else

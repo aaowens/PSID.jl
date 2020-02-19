@@ -76,8 +76,8 @@ function process_varname(name, var2ind_dict, df_vars, codebook_df, fastfind)
     un = Dict{String, String}()
     merge!(checkerror, un, codedict...)
     map!(trimlabel, values(un))
-    varnames = SortedDict{Int, Tuple{String, String, Vector{Float64}}}(
-    parse(Int, codebook_df.YEAR[i]) => (codebook_df.NAME[i], codebook_df.LABEL[i],
+    varnames = Dict{String, Tuple{String, String, Vector{Float64}}}(
+    codebook_df.YEAR[i] => (codebook_df.NAME[i], codebook_df.LABEL[i],
      codebook_df.excluding[i]) for i in codevec)
     varnames, iscontinuous(keys(un)), un
 end
