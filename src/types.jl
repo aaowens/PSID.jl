@@ -1,7 +1,7 @@
 mutable struct VarInfo5
     name_user::String
     unit::String
-    yeardict::SortedDict{Int, Tuple{String, String, Vector{Float64}}}
+    yeardict::Dict{String, Tuple{String, String, Vector{Float64}}}
     iscontinuous::Bool
     labeldict::Dict{String, String}
     VarInfo5() = new()
