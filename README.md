@@ -60,3 +60,7 @@ This package provides the following features:
 Certain variables are not in the family files. For example, the wealth data are in separate files, and there is some unique information in the individual file directly. In the future I plan to add support for these data, but you can manually add them by constructing the unique individual ID yourself as (ER30001 * 1000) + ER30002, and then joining your data on that ID with the dataset produced by PSID.jl. 
 
 Please file issues if you find a bug.
+
+# Donate your input JSON
+
+If you've made an input JSON file containing variables useful for some topic, feel free to file an issue or make a PR to add your file to the examples.
