@@ -117,7 +117,6 @@ function construct_alldata(famdatas, inddata; codemissings = true)
             df[!, :ishead] .= ishead
         end
     end
-
     allinds = DataFrame()
     for y_nx in eachindex(years)
         di = newdatas_ind[y_nx]
@@ -127,12 +126,13 @@ function construct_alldata(famdatas, inddata; codemissings = true)
         dj_heads = @where(di,  in.(:rel_head_ind, (1, 10) |> Set |> Ref))
         dj_spouses = @where(di,  in.(:rel_head_ind, (2, 20, 22) |> Set |> Ref))
         djall = vcat(dj_heads, dj_spouses)
-        famids = by(djall, [:id_family, :year], (:id_ind,) => x -> (famid = famid(x.id_ind),))
+        #famids = by(djall, [:id_family, :year], (:id_ind,) => x -> (famid = famid(x.id_ind),))
+        famids = combine(groupby(djall, [:id_family, :year]), AsTable(:id_ind) => (x -> famid(x.id_ind) => :famid))
         # join the heads with the head family file
-        hi = join(dj_heads, newdatas2.headdata[y_nx], on = [:id_family, :year])
-        si = join(dj_spouses, newdatas2.spousedata[y_nx], on = [:id_family, :year])
-        hi = join(hi, famids, on = [:id_family, :year])
-        si = join(si, famids, on = [:id_family, :year])
+        hi = innerjoin(dj_heads, newdatas2.headdata[y_nx], on = [:id_family, :year])
+        si = innerjoin(dj_spouses, newdatas2.spousedata[y_nx], on = [:id_family, :year])
+        hi = innerjoin(hi, famids, on = [:id_family, :year])
+        si = innerjoin(si, famids, on = [:id_family, :year])
         allinds = vcat(allinds, hi, cols = :union)
         allinds = vcat(allinds, si, cols = :union)
     end
