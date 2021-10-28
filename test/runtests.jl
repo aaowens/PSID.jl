@@ -1,5 +1,5 @@
 using Test
-using PSID, DataDeps, JSON3, Downloads
+using PSID, DataDeps, JSON3
 
 
 @show pwd()
@@ -15,10 +15,10 @@ catch
 end
 
 if skipdata
-    Downloads.download("https://raw.githubusercontent.com/aaowens/PSID.jl/master/examples/user_input.json", "user_input.json")
-    Downloads.download("https://simba.isr.umich.edu/downloads/PSIDCodebook.zip", "PSIDCodebook.zip")
+    Base.download("https://raw.githubusercontent.com/aaowens/PSID.jl/master/examples/user_input.json", "user_input.json")
+    Base.download("https://simba.isr.umich.edu/downloads/PSIDCodebook.zip", "PSIDCodebook.zip")
     run(DataDeps.unpack_cmd("PSIDCodebook.zip", "$(pwd())", ".zip", ""))
-    Downloads.download("https://psidonline.isr.umich.edu/help/xyr/psid.xlsx", "psid.xlsx")
+    Base.download("https://psidonline.isr.umich.edu/help/xyr/psid.xlsx", "psid.xlsx")
     userinput_json = "user_input.json"
     isfile(userinput_json) || error("$userinput_json not found in current directory")
     isdir("output") || mkdir("output")
