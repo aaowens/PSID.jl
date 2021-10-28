@@ -15,15 +15,15 @@ An example workflow can be found on my blog post [here](https://aaowens.github.i
 
 To add this package, use
 ```
-(@v1.4) pkg> add PSID
+(@v1.6) pkg> add PSID
 ```
 
 Next, download the PSID data files yourself. The package can't automatically fetch them because the PSID requires you to register for a free account before using the data.
 
 The list of data files required to be in the current directory can be found [here](https://github.com/aaowens/PSID.jl/blob/master/src/allfiles_hash.json). These files are
 
-1. The PSID codebook in XML format. You can download this from me here https://drive.google.com/open?id=1nz1UaVGcj0ur2Bp3ev7a8agJbj0A5JTF . In the future there will be a way to download this from the PSID directly.
-2. The zipped PSID family files and cross-year individual file, which can be downloaded here https://simba.isr.umich.edu/Zips/ZipMain.aspx. Do not extract the files--leave them zipped. You need to download every family file from 1968 to 2017, and you also need to download the cross-year individual file.
+1. The PSID codebook in XML format. You can download this from the PSID here https://simba.isr.umich.edu/downloads/PSIDCodebook.zip .
+2. The zipped PSID family files and cross-year individual file, which can be downloaded here https://simba.isr.umich.edu/Zips/ZipMain.aspx. Do not extract the files--leave them zipped. You need to download every family file from 1968 to 2019, and you also need to download the cross-year individual file.
 3. The XLSX cross-year index for the variables, which can be downloaded here https://psidonline.isr.umich.edu/help/xyr/psid.xlsx.
 
 After acquiring the data, run
