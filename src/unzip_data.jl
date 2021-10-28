@@ -72,9 +72,9 @@ function readPSID(zipname)
 end
 
 function unzip_data()
-    years = [collect(1968:1997); collect(1999:2:2017)]
+    years = [collect(1968:1997); collect(1999:2:2019)]
     filenames = [year <= 1993 ? "fam$year" : "fam$(year)er" for year in years]
     datas =  SortedDict(year => readPSID(filename) for (year, filename) in zip(years, filenames))
-    inddata = readPSID("ind2017er")
+    inddata = readPSID("ind2019er")
     (famdatas = datas, inddata = inddata)
 end
