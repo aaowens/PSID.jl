@@ -130,7 +130,8 @@ function process_input(inputjson)
     codebook_json = jsontable(read("output/codebook.json", String));
     codebook_df = DataFrame(codebook_json);
     codebook_df.codedict = [Dict(string(x) => y for (x, y) in dt) for dt in codebook_df.codedict]
-    crosswalk_df = DataFrame(XLSX.readtable("psid.xlsx", "MATRIX")...)
+    #@infiltrate
+    crosswalk_df = DataFrame(XLSX.readtable("psid.xlsx", "MATRIX"))
     crosswalk_df = mapcols(narrowtypes, crosswalk_df)
     ## Need a map from VAR to the right row
     df_vars = crosswalk_df[!, r"^Y.+"]

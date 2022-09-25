@@ -1,33 +1,55 @@
-using Test
-using PSID, DataDeps, JSON3
+#using Pkg
+#pkg"activate ."
+using PSID
+makePSID("user_input.json")
+
+using CSV, DataFrames, DataFramesMeta
+
+using Test 
+using Missings
+
+@testset "Data looks ok" begin
+alldata = CSV.read("output/allinds.csv", DataFrame, copycols = true)
+@test length(unique(alldata.age_spouse)) < 120
+@test minimum(alldata.age_spouse |> skipmissing) >= 0
+@test maximum(alldata.age_spouse|> skipmissing) <= 120
+
+@test length(unique(alldata.age_ind)) < 120
+@test minimum(alldata.age_ind |> skipmissing) >= 0
+@test maximum(alldata.age_ind|> skipmissing) <= 120
+
+@test nrow(alldata) >= 472609
+@test ncol(alldata) == 41
+
+nrows_byind = [nrow(sdf) for sdf in groupby(alldata, "id_ind")]
+
+@test minimum(nrows_byind) == 1
+@test maximum(nrows_byind) >= 41 
+@test maximum(nrows_byind) <= maximum(alldata.year) - minimum(alldata.year)
+
+## fix income since it changed in 1993
+inds = (alldata.year .<= 1993) .& (alldata.ishead .== true)
+alldata.labor_inc_spouse[inds] .= alldata.labor_inc_pre_spouse[inds]
+inds = (alldata.year .<= 1993) .& (alldata.ishead .== false)
+alldata.labor_inc_ind[inds] .= alldata.labor_inc_pre_ind[inds]
+
+## keep only SRC sample
+alldata = @subset(alldata, :famid_1968 .< 3000) # Keep only SRC sample
 
 
-@show pwd()
-x = dirname(pathof(PSID))
-fx = "$x/allfiles_hash.json"
-skipdata = try
-    PSID.verifyfiles(fx)
-    println("Found all files, running full tests")
-    false
-catch
-    println("Did not find data files, running partial tests")
-    true
-end
+## assume missing income is 0
+re(x, val) = Missings.replace(x, val) |> collect # Replace missing with value
+alldata.labor_inc_ind = re(alldata.labor_inc_ind, 0.)
+alldata.hours_ind = re(alldata.hours_ind, 0.)
+##
+using Statistics
+inc_byind = [mean(sdf.labor_inc_ind) for sdf in groupby(alldata, "id_ind")]
 
-if skipdata
-    Base.download("https://raw.githubusercontent.com/aaowens/PSID.jl/master/examples/user_input.json", "user_input.json")
-    Base.download("https://simba.isr.umich.edu/downloads/PSIDCodebook.zip", "PSIDCodebook.zip")
-    run(DataDeps.unpack_cmd("PSIDCodebook.zip", "$(pwd())", ".zip", ""))
-    Base.download("https://psidonline.isr.umich.edu/help/xyr/psid.xlsx", "psid.xlsx")
-    userinput_json = "user_input.json"
-    isfile(userinput_json) || error("$userinput_json not found in current directory")
-    isdir("output") || mkdir("output")
-    isdir("datafiles") || mkdir("datafiles")
-    PSID.process_codebook()
-    PSID.process_input("user_input.json")
-    JSON3.read(read("output/user_output.json", String), Vector{PSID.VarInfo5})
-    #famdatas, inddata = PSID.unzip_data()
-    #PSID.construct_alldata(famdatas, inddata)
-else
-    makePSID("user_input.json")
+hours_byind = [mean(sdf.hours_ind) for sdf in groupby(alldata, "id_ind")]
+
+wages_byind = [mean(sdf.labor_inc_ind ./ sdf.hours_ind) for sdf in groupby(alldata, "id_ind")]
+
+@test 10 <= median((w for w in wages_byind if w > 0)) <= 15
+
+@test 15_000 <= median((w for w in inc_byind if w > 0)) <= 25_000
 end

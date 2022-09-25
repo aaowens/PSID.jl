@@ -1,0 +1,62 @@
+[
+    {
+      "name_user": "id",
+      "varID": "V3",
+      "unit": "family"
+    },
+    {
+      "name_user": "hours",
+      "varID": "V465",
+      "unit": "head"
+    },
+    {
+      "name_user": "hours",
+      "varID": "V53",
+      "unit": "spouse"
+    },
+    {
+      "name_user": "state",
+      "varID": "ER13004",
+      "unit": "family"
+    },
+    {
+      "name_user": "age",
+      "varID": "ER60017",
+      "unit": "head"
+    },
+    {
+      "name_user": "age",
+      "varID": "ER60019",
+      "unit": "spouse"
+    },
+    {
+      "name_user": "sex",
+      "varID": "ER60018",
+      "unit": "head"
+    },
+    {
+      "name_user": "sex",
+      "varID": "ER60020",
+      "unit": "spouse"
+    },
+    {
+      "name_user": "labor_inc",
+      "varID": "ER65216",
+      "unit": "head"
+    },
+    {
+      "name_user": "labor_inc",
+      "varID": "ER65244",
+      "unit": "spouse"
+    },
+    {
+      "name_user": "labor_inc_pre",
+      "varID": "V75",
+      "unit": "spouse"
+    },
+    {
+      "name_user": "num_kids",
+      "varID": "V398",
+      "unit": "family"
+    }
+  ]

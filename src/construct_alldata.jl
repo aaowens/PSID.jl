@@ -121,10 +121,10 @@ function construct_alldata(famdatas, inddata; codemissings = true)
     for y_nx in eachindex(years)
         di = newdatas_ind[y_nx]
         if y_nx > 1 # Sequence number not in 1968
-            di = @where(di, inrange.(:seq_num_ind, 1, 20))
+            di = @subset(di, inrange.(:seq_num_ind, 1, 20))
         end
-        dj_heads = @where(di,  in.(:rel_head_ind, (1, 10) |> Set |> Ref))
-        dj_spouses = @where(di,  in.(:rel_head_ind, (2, 20, 22) |> Set |> Ref))
+        dj_heads = @subset(di,  in.(:rel_head_ind, (1, 10) |> Set |> Ref))
+        dj_spouses = @subset(di,  in.(:rel_head_ind, (2, 20, 22) |> Set |> Ref))
         djall = vcat(dj_heads, dj_spouses)
         #famids = by(djall, [:id_family, :year], (:id_ind,) => x -> (famid = famid(x.id_ind),))
         famids = combine(groupby(djall, [:id_family, :year]), AsTable(:id_ind) => (x -> famid(x.id_ind) => :famid))
