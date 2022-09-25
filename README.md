@@ -22,7 +22,7 @@ Next, download the PSID data files yourself. The package can't automatically fet
 
 The list of data files required to be in the current directory can be found [here](https://github.com/aaowens/PSID.jl/blob/master/src/allfiles_hash.json). These files are
 
-1. The PSID codebook in XML format. You can download this from the PSID here https://simba.isr.umich.edu/downloads/PSIDCodebook.zip .
+1. The PSID codebook in XML format. You used to be able to download this from the PSID here https://simba.isr.umich.edu/downloads/PSIDCodebook.zip , but the link is broken. I put it in my Google Drive here https://drive.google.com/file/d/1CPwM5tsphdezi4RqlHGMkS1hiLLRZIT7/view .
 2. The zipped PSID family files and cross-year individual file, which can be downloaded here https://simba.isr.umich.edu/Zips/ZipMain.aspx. Do not extract the files--leave them zipped. You need to download every family file from 1968 to 2019, and you also need to download the cross-year individual file.
 3. The XLSX cross-year index for the variables, which can be downloaded here https://psidonline.isr.umich.edu/help/xyr/psid.xlsx.
 
@@ -33,6 +33,8 @@ julia> makePSID("user_input.json")
 # to not code missings, makePSID("user_input.json", codemissings = false)
 ```
 It will verify the required files exist and then construct the data. If successful, it will print `Finished constructing individual data, saved to output/allinds.csv` after about 5 minutes.
+
+This will use about 15 GB of RAM. It may not work on machines without much memory. 
 
 ## The input JSON file
 The file passed to `makePSID` describes the variables you want.
