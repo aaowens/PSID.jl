@@ -68,6 +68,7 @@ function readPSID(zipname)
     alltokens = process_tok(tok)
     toks = [(alltokens[i], str2range(alltokens[i+1])) for i in 1:2:length(alltokens)]
     data = readlines("$t/$ZIPNAME.txt")
+    Base.GC.gc() # memory was going too high
     out = read_fixedwidth(data, toks)
 end
 
