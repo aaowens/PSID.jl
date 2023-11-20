@@ -27,6 +27,9 @@ nrows_byind = [nrow(sdf) for sdf in groupby(alldata, "id_ind")]
 @test maximum(nrows_byind) >= 41 
 @test maximum(nrows_byind) <= maximum(alldata.year) - minimum(alldata.year)
 
+@test minimum(alldata.year) == 1968
+@test maximum(alldata.year) == 2021
+
 ## fix income since it changed in 1993
 inds = (alldata.year .<= 1993) .& (alldata.ishead .== true)
 alldata.labor_inc_spouse[inds] .= alldata.labor_inc_pre_spouse[inds]

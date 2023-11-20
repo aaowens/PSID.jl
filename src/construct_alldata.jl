@@ -19,7 +19,7 @@ function construct_alldata(famdatas, inddata; codemissings = true)
     #readme = procvar
     readme_ind = JSON3.read(read("output/ind_output.json", String), Vector{VarInfo5})
 
-    years = [collect(1968:1997); collect(1999:2:2019)]
+    years = [collect(1968:1997); collect(1999:2:2021)]
     newdatas_ind = [DataFrame() for x in famdatas]
     # Go year by year
     for y_nx in eachindex(years)
@@ -138,6 +138,7 @@ function construct_alldata(famdatas, inddata; codemissings = true)
     end
     CSV.write("output/allinds.csv", allinds)
     println("Finished constructing individual data, saved to output/allinds.csv")
+    return allinds
 end
 
 """
