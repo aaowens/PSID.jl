@@ -1,6 +1,6 @@
 name = "PSID"
 uuid = "92fd0282-be9c-47fb-a489-f0d0a91db595"
-version = "4.0.1"
+version = "4.1.1"
 
 [deps]
 AbstractTrees = "1520ce14-60c1-5f80-bbc7-55ef81b5835c"
