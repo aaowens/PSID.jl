@@ -54,6 +54,8 @@ function parse2(s, v)
 end
 narrowtypes(A) = [a for a in A]
 
+using Infiltrator
+
 """
 Inputs:
 name: The variable ID we want to match
@@ -71,14 +73,49 @@ function process_varname(name, var2ind_dict, df_vars, codebook_df, fastfind)
     mynames = [ r for r in dfvar if r !== missing]
     ## Need to figure out the variable label expansion
     # Can I just take the union?
-    codevec = [fastfind[s] for s in values(mynames)]
+    ## issue #53
+    ## some variables are in the data and crosswalk, but not in the codebook 
+
+    #codevec = [fastfind[s] for s in values(mynames)]
+    codevec = [get(fastfind, s, missing) for s in values(mynames)]
+    if any(ismissing, codevec) 
+        println("Warning: Variable $name is not in the codebook, will have no labels")
+        #Infiltrator.@infiltrate
+        myyears = Dict{String, String}(dfvar[key] => string(key)[2:end] 
+            for key in keys(dfvar) if dfvar[key] !== missing)
+        un = Dict{String, String}(x => "" for x in mynames) ## labels
+        ## need to map years -> (name, "", ???)
+        ## excluding is used in coding missing values
+        ## just set to Float64[]
+        ## how do we know which years these vars are for
+        #### ????????
+        #=
+        we have all the names (43?) names
+        can we get them 
+        yes, this is in myrow, the crosswalk
+        infil> dfvar
+DataFrameRow
+  Row │ Y1968    Y1969    Y1970    Y1971    Y1972    Y1973    Y1974    Y1975    Y1976    Y1977    Y ⋯
+      │ String?  String?  String?  String?  String?  String?  String?  String?  String?  String?  S ⋯
+──────┼──────────────────────────────────────────────────────────────────────────────────────────────
+ 8927 │ V3       V442     V1102    V1802    V2402    V3002    V3402    V3802    V4302    V5202    V ⋯
+                                                                                   32 columns om
+        map any non-missing value to the column name without the Y
+
+        =#
+        varnames = Dict{String, Tuple{String, String, Vector{Float64}}}(
+            myyears[name] => (name, "",
+            Float64[]) for name in mynames)
+        return varnames, true, un
+        
+    end
     codedict = [codebook_df.codedict[i] for i in codevec]
     un = Dict{String, String}()
     merge!(checkerror, un, codedict...)
     map!(trimlabel, values(un))
     varnames = Dict{String, Tuple{String, String, Vector{Float64}}}(
     codebook_df.YEAR[i] => (codebook_df.NAME[i], codebook_df.LABEL[i],
-     codebook_df.excluding[i]) for i in codevec)
+        codebook_df.excluding[i]) for i in codevec)
     varnames, iscontinuous(keys(un)), un
 end
 
