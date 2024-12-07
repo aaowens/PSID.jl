@@ -1,7 +1,11 @@
 #using Pkg
 #pkg"activate ."
+# Insert the path to your PSID_DATA_DIR here. It should contain all the data files.
+# export PSID_DATA_DIR=/home/andrew/Documents/julia/PSIDTool/testdata
+@assert haskey(ENV, "PSID_DATA_DIR")
+cd(ENV["PSID_DATA_DIR"])
 using PSID
-makePSID("user_input.json")
+@time makePSID("user_input.json")
 
 using CSV, DataFrames, DataFramesMeta
 
@@ -19,12 +23,12 @@ alldata = CSV.read("output/allinds.csv", DataFrame, copycols = true)
 @test maximum(alldata.age_ind|> skipmissing) <= 120
 
 @test nrow(alldata) >= 472609
-@test ncol(alldata) == 41
+@test ncol(alldata) == 43
 
 nrows_byind = [nrow(sdf) for sdf in groupby(alldata, "id_ind")]
 
 @test minimum(nrows_byind) == 1
-@test maximum(nrows_byind) >= 41 
+@test maximum(nrows_byind) >= 42 
 @test maximum(nrows_byind) <= maximum(alldata.year) - minimum(alldata.year)
 
 @test minimum(alldata.year) == 1968
@@ -55,4 +59,12 @@ wages_byind = [mean(sdf.labor_inc_ind ./ sdf.hours_ind) for sdf in groupby(allda
 @test 10 <= median((w for w in wages_byind if w > 0)) <= 15
 
 @test 15_000 <= median((w for w in inc_byind if w > 0)) <= 25_000
+
+## issue #53 
+## what to do with data that's in data and psid.xlsx, but not in the codebook 
+## ex V13500
+## suggest just leave label blank
+## Not string
+@test eltype(alldata.spouserace1_family) == Union{Missing, Float64}
+@test "V13500" in alldata.spouserace1_family_code_fam
 end
