@@ -54,7 +54,7 @@ function parse2(s, v)
 end
 narrowtypes(A) = [a for a in A]
 
-using Infiltrator
+
 
 """
 Inputs:
@@ -80,7 +80,6 @@ function process_varname(name, var2ind_dict, df_vars, codebook_df, fastfind)
     codevec = [get(fastfind, s, missing) for s in values(mynames)]
     if any(ismissing, codevec) 
         println("Warning: Variable $name is not in the codebook, will have no labels")
-        #Infiltrator.@infiltrate
         myyears = Dict{String, String}(dfvar[key] => string(key)[2:end] 
             for key in keys(dfvar) if dfvar[key] !== missing)
         un = Dict{String, String}(x => "" for x in mynames) ## labels
@@ -167,7 +166,6 @@ function process_input(inputjson)
     codebook_json = jsontable(read("output/codebook.json", String));
     codebook_df = DataFrame(codebook_json);
     codebook_df.codedict = [Dict(string(x) => y for (x, y) in dt) for dt in codebook_df.codedict]
-    #@infiltrate
     crosswalk_df = DataFrame(XLSX.readtable("psid.xlsx", "MATRIX"))
     crosswalk_df = mapcols(narrowtypes, crosswalk_df)
     ## Need a map from VAR to the right row
