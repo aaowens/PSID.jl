@@ -42,6 +42,8 @@ function str2range(s)
     parse(Int, first(c).match):parse(Int, last(c).match)
 end
 
+const PARSER_OPTS = Parsers.OPTIONS
+
 function read_fixedwidth(data, toks)
     names = String[tok[1] for tok in toks]
     dat = zeros(length(data), length(toks))
@@ -50,7 +52,7 @@ function read_fixedwidth(data, toks)
         for j in eachindex(toks)
             tok = toks[j]
             r = tok[2]
-            dat[i, j] = Parsers.parse(Float64, line[r])
+            dat[i, j] = Parsers.parse(Float64, line, PARSER_OPTS, first(r), last(r))
         end
     end
     DataFrame(dat, Symbol.(names))
@@ -73,9 +75,9 @@ function readPSID(zipname)
 end
 
 function unzip_data()
-    years = [collect(1968:1997); collect(1999:2:2021)]
+    years = [collect(1968:1997); collect(1999:2:2023)]
     filenames = [year <= 1993 ? "fam$year" : "fam$(year)er" for year in years]
     datas =  SortedDict(year => readPSID(filename) for (year, filename) in zip(years, filenames))
-    inddata = readPSID("ind2021er")
+    inddata = readPSID("ind2023er")
     (famdatas = datas, inddata = inddata)
 end

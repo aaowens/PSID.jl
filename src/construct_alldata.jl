@@ -19,7 +19,7 @@ function construct_alldata(famdatas, inddata; codemissings = true)
     #readme = procvar
     readme_ind = JSON3.read(read("output/ind_output.json", String), Vector{VarInfo5})
 
-    years = [collect(1968:1997); collect(1999:2:2021)]
+    years = [collect(1968:1997); collect(1999:2:2023)]
     newdatas_ind = [DataFrame() for x in famdatas]
     # Go year by year
     for y_nx in eachindex(years)
@@ -120,6 +120,9 @@ function construct_alldata(famdatas, inddata; codemissings = true)
     allinds = DataFrame()
     for y_nx in eachindex(years)
         di = newdatas_ind[y_nx]
+
+        ## The point of this seq_num_ind filter is that it is only in the range 1-20 if the 
+        ## individual is in the family unit at the time of the survey
         if y_nx > 1 # Sequence number not in 1968
             di = @subset(di, inrange.(:seq_num_ind, 1, 20))
         end
