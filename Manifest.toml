@@ -323,7 +323,7 @@ version = "1.8.1"
 deps = ["AbstractTrees", "CSV", "DataDeps", "DataFrames", "DataFramesMeta", "DataStructures", "Infiltrator", "JSON3", "JSONTables", "LightXML", "Parsers", "ProgressMeter", "SHA", "XLSX"]
 path = "."
 uuid = "92fd0282-be9c-47fb-a489-f0d0a91db595"
-version = "4.1.1"
+version = "5.0.0"
 
 [[deps.Parsers]]
 deps = ["Dates", "PrecompileTools", "UUIDs"]
