@@ -32,7 +32,7 @@ nrows_byind = [nrow(sdf) for sdf in groupby(alldata, "id_ind")]
 @test maximum(nrows_byind) <= maximum(alldata.year) - minimum(alldata.year)
 
 @test minimum(alldata.year) == 1968
-@test maximum(alldata.year) == 2021
+@test maximum(alldata.year) == 2023
 
 ## fix income since it changed in 1993
 inds = (alldata.year .<= 1993) .& (alldata.ishead .== true)
@@ -56,7 +56,7 @@ hours_byind = [mean(sdf.hours_ind) for sdf in groupby(alldata, "id_ind")]
 
 wages_byind = [mean(sdf.labor_inc_ind ./ sdf.hours_ind) for sdf in groupby(alldata, "id_ind")]
 
-@test 10 <= median((w for w in wages_byind if w > 0)) <= 15
+@test 10 <= median((w for w in wages_byind if w > 0)) <= 16
 
 @test 15_000 <= median((w for w in inc_byind if w > 0)) <= 25_000
 

@@ -15,7 +15,7 @@ An example workflow can be found on my blog post [here](https://aaowens.github.i
 
 To add this package, use
 ```
-(@v1.6) pkg> add PSID
+(@v1.12) pkg> add PSID
 ```
 
 Next, download the PSID data files yourself. The package can't automatically fetch them because the PSID requires you to register for a free account before using the data.
