@@ -12,6 +12,7 @@ using CSV, DataFrames, DataFramesMeta
 using Test 
 using Missings
 
+@testset "PSID tests" begin
 @testset "Data looks ok" begin
 alldata = CSV.read("output/allinds.csv", DataFrame, copycols = true)
 @test length(unique(alldata.age_spouse)) < 120
@@ -67,4 +68,25 @@ wages_byind = [mean(sdf.labor_inc_ind ./ sdf.hours_ind) for sdf in groupby(allda
 ## Not string
 @test eltype(alldata.spouserace1_family) == Union{Missing, Float64}
 @test "V13500" in alldata.spouserace1_family_code_fam
+end
+
+@testset "Fast fixed width parser works" begin
+    @time output_fast = makePSID("user_input.json")
+    @time output_slow = makePSID("user_input.json", fastparse = false)
+
+    @test names(output_fast) == names(output_slow)
+    numeric_colnames = names(output_fast)[findall(col -> eltype(col) <: Number, eachcol(output_fast))]
+    other_colnames = [name for name in names(output_fast) if !(name in numeric_colnames)]
+    other_colnames = setdiff(names(output_fast), numeric_colnames)
+    output_fast_num = output_fast[!, numeric_colnames]
+    output_slow_num = output_slow[!, numeric_colnames]
+    output_fast_str = output_fast[!, other_colnames]
+    output_slow_str = output_slow[!, other_colnames]
+    @test isapprox(Matrix(output_fast_num), Matrix(output_slow_num); rtol=0, atol=1e-13)
+    
+    @test all(isequal.(Matrix(output_fast_str), Matrix(output_slow_str)))
+    
+    #output_fast[!, numeric_cols_fast]
+
+end
 end
